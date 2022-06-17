@@ -1,14 +1,23 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Image } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setTimeout(() => {
+        navigation.navigate('Login');
+      }, 3000);
+    });
+    return unsubscribe;
+  });
+
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>Welcome to the</Text>
-      <Text style={{ fontSize: 20 }}>Sports Pal application</Text>
-      <View style={styles.button}>
-        <Button title="Find your sports pal" />
-      </View>
+      <Image
+        source={require('../assets/sportspal.png')}
+        style={{ height: 250 }}
+        resizeMode="contain"
+      />
     </View>
   );
 };
@@ -18,6 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   button: {
     margin: 30,
