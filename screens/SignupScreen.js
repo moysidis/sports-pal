@@ -1,9 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
+
+  const handleSignup = () => {
+    console.log('handleSignup');
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        if (user) {
+          // storeImage();
+          // ...
+        }
+        // ...
+      })
+      .then(() => {
+        navigation.replace('Map');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        alert(errorCode);
+        // ..
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -54,7 +85,17 @@ const SignupScreen = ({ navigation }) => {
           alignItems: 'flex-start',
         }}
       >
-        <Button title="Sign Up" onPress={() => console.log('Signup')} />
+        <Button title="Sign Up" onPress={handleSignup} />
+      </View>
+      <View
+        style={{
+          marginTop: 40,
+        }}
+      >
+        <Button
+          title="Already have an account"
+          onPress={() => navigation.navigate('Login')}
+        />
       </View>
     </View>
   );

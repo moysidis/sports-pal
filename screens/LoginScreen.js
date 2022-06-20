@@ -1,9 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
+
+  const handleLogin = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        alert(errorCode);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -23,6 +45,7 @@ const LoginScreen = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           email={true}
+          autoCapitalize="none"
         />
       </View>
       <View
@@ -53,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
           marginTop: 40,
         }}
       >
-        <Button title="Login" onPress={() => console.log('login')} />
+        <Button title="Login" onPress={handleLogin} />
       </View>
       <View
         style={{
