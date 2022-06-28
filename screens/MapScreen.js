@@ -5,9 +5,10 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
 const MapScreen = ({ navigation }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(auth.currentUser);
 
   useLayoutEffect(() => {
+    console.log(auth);
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={signUserOut}>
@@ -37,6 +38,7 @@ const MapScreen = ({ navigation }) => {
     <View>
       <Text>MapScreen</Text>
       <Text>User: {currentUser && currentUser.email} </Text>
+      <Text>User: {currentUser && currentUser.uid} </Text>
     </View>
   );
 };
