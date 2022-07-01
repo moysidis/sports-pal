@@ -7,11 +7,18 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 const Signup3 = ({ image, pickImage, nextStep, previousStep }) => {
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <View style={{ alignItems: 'center', marginTop: 30 }}>
+      <TouchableOpacity
+        style={{ position: 'absolute', left: 20, top: 20 }}
+        onPress={previousStep}
+      >
+        <AntDesign name="arrowleft" size={34} color="black" />
+      </TouchableOpacity>
+      <View style={{ alignItems: 'center', marginTop: 50 }}>
         <Text style={{ fontSize: 34 }}>Add Profile Photo</Text>
         <Text style={{ fontSize: 18 }}>Add a profile photo so</Text>
         <Text style={{ fontSize: 18 }}>your friends know it's you</Text>
@@ -45,28 +52,7 @@ const Signup3 = ({ image, pickImage, nextStep, previousStep }) => {
           >
             <TouchableOpacity
               style={{
-                width: 150,
-                backgroundColor: 'grey',
-                alignItems: 'center',
-                borderRadius: 15,
-                marginHorizontal: 10,
-              }}
-              onPress={previousStep}
-            >
-              <Text
-                style={{
-                  padding: 10,
-                  color: 'white',
-                  fontSize: 22,
-                  fontWeight: '500',
-                }}
-              >
-                Previous
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: 150,
+                width: 250,
                 backgroundColor: '#ef3939',
                 alignItems: 'center',
                 borderRadius: 15,

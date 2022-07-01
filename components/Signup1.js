@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { AntDesign } from '@expo/vector-icons';
 
 const Signup1 = ({
   name,
@@ -21,6 +22,12 @@ const Signup1 = ({
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ position: 'absolute', left: 20, top: 20 }}
+        onPress={() => navigation.navigate('Login')}
+      >
+        <AntDesign name="arrowleft" size={34} color="black" />
+      </TouchableOpacity>
       <View style={{ alignItems: 'center', marginTop: 30, marginBottom: 30 }}>
         <Text style={{ fontSize: 34 }}>Sign Up</Text>
         <Text style={{ fontSize: 18 }}>
@@ -169,8 +176,8 @@ const Signup1 = ({
             borderRadius: 15,
             marginVertical: 10,
           }}
-          // onPress={checkAndProceed}
-          onPress={nextStep}
+          onPress={checkAndProceed}
+          // onPress={nextStep}
         >
           <Text
             style={{
@@ -181,27 +188,6 @@ const Signup1 = ({
             }}
           >
             Next
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 210,
-            backgroundColor: 'grey',
-            alignItems: 'center',
-            borderRadius: 15,
-            marginVertical: 5,
-          }}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text
-            style={{
-              padding: 10,
-              color: 'white',
-              fontSize: 16,
-              fontWeight: '500',
-            }}
-          >
-            Already Have Account
           </Text>
         </TouchableOpacity>
       </View>

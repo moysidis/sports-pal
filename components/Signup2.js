@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
 
 const Signup2 = ({
@@ -17,38 +19,36 @@ const Signup2 = ({
   nextStep,
   previousStep,
 }) => {
+  const INITALREGION = {
+    latitude: 44.814026,
+    longitude: -99.632196,
+    latitudeDelta: 30,
+    longitudeDelta: 30,
+  };
+
+  useEffect(() => {
+    if (!location) getCurrentPosition();
+  }, [location]);
+
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <TouchableOpacity
+        style={{ position: 'absolute', left: 20, top: 20 }}
+        onPress={previousStep}
+      >
+        <AntDesign name="arrowleft" size={34} color="black" />
+      </TouchableOpacity>
+
       <View
         style={{ justifyContent: 'center', alignItems: 'center', flex: 1.2 }}
       >
         <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
           <Text style={{ fontSize: 28 }}>Tap your location on the map</Text>
         </View>
-        <TouchableOpacity
-          style={{
-            width: 250,
-            backgroundColor: 'blue',
-            alignItems: 'center',
-            borderRadius: 15,
-            marginBottom: 20,
-          }}
-          onPress={getCurrentPosition}
-        >
-          <Text
-            style={{
-              padding: 10,
-              color: 'white',
-              fontSize: 18,
-              fontWeight: '500',
-            }}
-          >
-            Enable Location Services
-          </Text>
-        </TouchableOpacity>
       </View>
       <View style={{ flex: 5 }}>
         <MapView
+          initialRegion={INITALREGION}
           region={region}
           style={styles.map}
           onPress={(e) => setUserLocation(e.nativeEvent.coordinate)}
@@ -72,34 +72,15 @@ const Signup2 = ({
           >
             <TouchableOpacity
               style={{
-                width: 150,
-                backgroundColor: 'grey',
+                width: 250,
+                backgroundColor: location ? '#ef3939' : 'grey',
                 alignItems: 'center',
                 borderRadius: 15,
                 marginHorizontal: 10,
               }}
-              onPress={previousStep}
-            >
-              <Text
-                style={{
-                  padding: 10,
-                  color: 'white',
-                  fontSize: 22,
-                  fontWeight: '500',
-                }}
-              >
-                Previous
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: 150,
-                backgroundColor: '#ef3939',
-                alignItems: 'center',
-                borderRadius: 15,
-                marginHorizontal: 10,
+              onPress={() => {
+                if (location) nextStep();
               }}
-              onPress={nextStep}
             >
               <Text
                 style={{

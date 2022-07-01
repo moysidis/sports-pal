@@ -12,7 +12,7 @@ const LoadingScreen = ({ navigation }) => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      navigation.replace(user ? 'Map' : 'Login');
+      navigation.replace(user ? 'TabView' : 'Login');
     });
   }, []);
 

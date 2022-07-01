@@ -34,7 +34,7 @@ const SignupScreen = ({ navigation }) => {
   const [city, setCity] = useState('');
   const [password, setPassword] = useState('');
   const [reenterPassword, setReenterPassword] = useState('');
-  const [interests, setInterests] = useState('');
+  const [sports, setSports] = useState([]);
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
   const [image, setImage] = useState(null);
@@ -157,8 +157,10 @@ const SignupScreen = ({ navigation }) => {
         if (user) {
           setDoc(doc(db, 'users', user.uid), {
             name: name,
+            email: email,
+            city: city,
             location: location,
-            interests: ['walking', 'jogging'],
+            sports: sports,
           });
 
           if (image) storeImage();
@@ -166,7 +168,7 @@ const SignupScreen = ({ navigation }) => {
         // ...
       })
       .then(() => {
-        navigation.replace('Map');
+        navigation.replace('TabView');
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -214,8 +216,8 @@ const SignupScreen = ({ navigation }) => {
       )}
       {modalStep === 4 && (
         <Signup4
-          interests={interests}
-          setInterests={setInterests}
+          sports={sports}
+          setSports={setSports}
           handleSignup={handleSignup}
           previousStep={previousStep}
         />

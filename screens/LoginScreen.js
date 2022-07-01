@@ -5,6 +5,7 @@ import { auth } from '../firebase';
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -12,6 +13,15 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(true);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation.replace('TabView');
+        // ...
+      }
+    });
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
