@@ -176,8 +176,8 @@ const Signup1 = ({
             borderRadius: 15,
             marginVertical: 10,
           }}
-          onPress={checkAndProceed}
-          // onPress={nextStep}
+          // onPress={checkAndProceed}
+          onPress={nextStep}
         >
           <Text
             style={{

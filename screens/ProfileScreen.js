@@ -33,7 +33,9 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <View>
-      <Text>ProfileScreen</Text>
+      <View style={{ marginVertical: 30, alignItems: 'center' }}>
+        <Text style={{ fontSize: 26, fontWeight: 'bold' }}>My account</Text>
+      </View>
     </View>
   );
 };

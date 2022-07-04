@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import {
   View,
   Text,
-  Alert,
+  Image,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -11,7 +11,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
   useEffect(() => {
-    console.log(sports);
+    console.log('sports', sports);
   }, [sports]);
 
   const handlePress = (sport) => {
@@ -37,10 +37,50 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
           <Text style={{ fontSize: 28 }}>Select your sports</Text>
           <Text style={{ fontSize: 18 }}>Max 3 sports</Text>
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            padding: 10,
+          }}
+        >
+          {sports.map((sport, index) => {
+            const getImage = (name) => {
+              switch (name) {
+                case 'Walking':
+                  return require('../assets/sports/Walking.png');
+                case 'Running':
+                  return require('../assets/sports/Running.png');
+                case 'Swimming':
+                  return require('../assets/sports/Swimming.png');
+                case 'Boxing':
+                  return require('../assets/sports/Boxing.png');
+                case 'Tennis':
+                  return require('../assets/sports/Tennis.png');
+                case 'Table tennis':
+                  return require('../assets/sports/Tabletennis.png');
+                case 'Cycling':
+                  return require('../assets/sports/Cycling.png');
+                case 'Gym':
+                  return require('../assets/sports/Gym.png');
+              }
+            };
+
+            return (
+              <View key={index}>
+                <Image
+                  source={getImage(sport)}
+                  resizeMode="contain"
+                  style={{ width: 50, height: 50, backgroundColor: 'white' }}
+                />
+              </View>
+            );
+          })}
+        </View>
         <View style={{ flexDirection: 'row' }}>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Walking')
                 ? 'lightgreen'
@@ -57,7 +97,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
           </Pressable>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Running')
                 ? 'lightgreen'
@@ -76,7 +116,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
         <View style={{ flexDirection: 'row' }}>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Tennis')
                 ? 'lightgreen'
@@ -93,9 +133,9 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
           </Pressable>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
-              backgroundColor: sports.includes('Ping pong')
+              backgroundColor: sports.includes('Table tennis')
                 ? 'lightgreen'
                 : 'lightgrey',
               borderColor: 'black',
@@ -104,16 +144,16 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => handlePress('Ping pong')}
+            onPress={() => handlePress('Table tennis')}
           >
-            <Text style={{ fontSize: 18 }}>Ping pong</Text>
+            <Text style={{ fontSize: 18 }}>Table tennis</Text>
           </Pressable>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Gym')
                 ? 'lightgreen'
@@ -130,7 +170,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
           </Pressable>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Boxing')
                 ? 'lightgreen'
@@ -149,7 +189,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
         <View style={{ flexDirection: 'row' }}>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Swimming')
                 ? 'lightgreen'
@@ -166,7 +206,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
           </Pressable>
           <Pressable
             style={{
-              height: 140,
+              height: 110,
               width: 140,
               backgroundColor: sports.includes('Cycling')
                 ? 'lightgreen'
