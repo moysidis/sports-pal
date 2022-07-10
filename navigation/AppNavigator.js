@@ -7,6 +7,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ProfileMapScreen from '../screens/ProfileMapScreen';
 import MapScreen from '../screens/MapScreen';
 import ChatScreen from '../screens/ChatScreen';
 
@@ -93,6 +94,7 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="TabView" component={TabFlow} />
+        <Stack.Screen name="TheProfileMap" component={ProfileMapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -42,7 +42,7 @@ const Signup2 = ({
       <View
         style={{ justifyContent: 'center', alignItems: 'center', flex: 1.2 }}
       >
-        <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
+        <View style={{ alignItems: 'center', marginTop: 40, marginBottom: 10 }}>
           <Text style={{ fontSize: 28 }}>Tap your location on the map</Text>
         </View>
       </View>

@@ -32,6 +32,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
       >
         <AntDesign name="arrowleft" size={34} color="black" />
       </TouchableOpacity>
+
       <View style={{ marginBottom: 20 }}>
         <View style={{ alignItems: 'center', marginTop: 40, marginBottom: 10 }}>
           <Text style={{ fontSize: 28 }}>Select your sports</Text>

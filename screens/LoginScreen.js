@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Alert, Image } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { auth } from '../firebase';
@@ -8,20 +8,13 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import UsersContext from '../context/usersContext';
 
 const LoginScreen = ({ navigation }) => {
+  const { usersState, setUsers, setCurentUser } = useContext(UsersContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(true);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation.replace('TabView');
-        // ...
-      }
-    });
-  });
 
   useLayoutEffect(() => {
     navigation.setOptions({

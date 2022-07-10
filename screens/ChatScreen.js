@@ -7,6 +7,7 @@ import { signOut } from 'firebase/auth';
 const ChatScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: false, // Hide the header
       headerLeft: () => (
         <TouchableOpacity onPress={signUserOut}>
           <SimpleLineIcons

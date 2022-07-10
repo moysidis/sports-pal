@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,38 +6,35 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Modal,
+  Button,
 } from 'react-native';
-import WebView from 'react-native-webview';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import MapView, { Marker, Callout, Polyline } from 'react-native-maps';
 import { auth, db } from '../firebase';
 import { signOut } from 'firebase/auth';
-import {
-  addDoc,
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  setDoc,
-  getDoc,
-} from 'firebase/firestore';
+import UsersContext from '../context/usersContext';
 
 const MapScreen = ({ navigation, route }) => {
+  const { usersState } = useContext(UsersContext);
+
   const INITALREGION = {
     latitude: 44.814026,
     longitude: -99.632196,
     latitudeDelta: 30,
     longitudeDelta: 30,
   };
-  const [currentUser, setCurrentUser] = useState(auth.currentUser);
-  const [users, setUsers] = useState([]);
-  const [currentUserData, setCurrentUserData] = useState(null);
+
+  const [users, setUsers] = useState(usersState.userDocs);
+  const [currentUserData, setCurrentUserData] = useState(
+    usersState.currentUser
+  );
   const [region, setRegion] = useState(INITALREGION);
+  const [showModal, setShowModal] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: false, // Hide the header
       headerLeft: () => (
         <TouchableOpacity onPress={signUserOut}>
           <SimpleLineIcons
@@ -50,22 +47,6 @@ const MapScreen = ({ navigation, route }) => {
       ),
     });
   });
-
-  useLayoutEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(collection(db, 'users')),
-      (snapshot) => {
-        setUsers(snapshot.docs);
-      }
-    );
-
-    return unsubscribe;
-  }, [route]);
-
-  useEffect(() => {
-    const curUser = users.filter((user) => user.id === currentUser.uid);
-    setCurrentUserData(curUser[0]?.data());
-  }, [users]);
 
   useEffect(() => {
     setRegion({
@@ -89,81 +70,96 @@ const MapScreen = ({ navigation, route }) => {
 
   return (
     <View style={{}}>
-      <MapView style={{ height: '100%' }} region={region}>
-        {users.map((doc, index) => {
-          const getImage = (name) => {
-            switch (name) {
-              case 'Walking':
-                require('../assets/sports/Walking.png');
-              case 'Running':
-                require('../assets/sports/Running.png');
-              case 'Swimming':
-                require('../assets/sports/Swimming.png');
-              case 'Boxing':
-                require('../assets/sports/Boxing.png');
-              case 'Tennis':
-                require('../assets/sports/Tennis.png');
-              case 'Table tennis':
-                require('../assets/sports/Tabletennis.png');
-              case 'Cycling':
-                require('../assets/sports/Cycling.png');
-              case 'Gym':
-                require('../assets/sports/Gym.png');
-            }
-          };
+      {region.latitude && (
+        <MapView style={{ height: '100%' }} region={region}>
+          {users
+            .filter((doc) => doc.id !== auth?.currentUser?.uid) // filter out the current user
+            .map((doc, index) => {
+              const getImage = (name) => {
+                switch (name) {
+                  case 'Walking':
+                    require('../assets/sports/Walking.png');
+                  case 'Running':
+                    require('../assets/sports/Running.png');
+                  case 'Swimming':
+                    require('../assets/sports/Swimming.png');
+                  case 'Boxing':
+                    require('../assets/sports/Boxing.png');
+                  case 'Tennis':
+                    require('../assets/sports/Tennis.png');
+                  case 'Table tennis':
+                    require('../assets/sports/Tabletennis.png');
+                  case 'Cycling':
+                    require('../assets/sports/Cycling.png');
+                  case 'Gym':
+                    require('../assets/sports/Gym.png');
+                }
+              };
 
-          if (doc.data().location)
-            return (
-              <Marker
-                key={index}
-                coordinate={doc.data().location}
-                title={doc.data().name}
-                // description={
-                //   doc.data().sports ? doc.data().sports.join(', ') : ''
-                // }
-              >
-                <Callout
-                  // tooltip
-                  style={{
-                    maxWidth: 300,
-                  }}
-                >
-                  <View>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                      {doc.data().name}
-                    </Text>
-                    <View style={{ flexDirection: 'row' }}>
-                      {doc.data().sports.map((sport, index) => {
-                        return (
-                          <View
-                            key={index}
-                            style={{ flex: 1, backgroundColor: 'transparent' }}
-                          >
-                            {Platform.OS === 'ios' ? (
-                              <Image
-                                source={getImage(sport)}
-                                resizeMode="contain"
+              if (doc.data().location)
+                return (
+                  <Marker
+                    key={index}
+                    coordinate={doc.data().location}
+                    title={doc.data().name}
+                    onCalloutPress={() => setShowModal(true)}
+                    // description={
+                    //   doc.data().sports ? doc.data().sports.join(', ') : ''
+                    // }
+                  >
+                    <Callout
+                      style={{
+                        maxWidth: 300,
+                      }}
+                    >
+                      <View>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                          {doc.data().name}
+                        </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                          {doc.data().sports.map((sport, index) => {
+                            return (
+                              <View
+                                key={index}
                                 style={{
-                                  width: 60,
-                                  height: 60,
-                                  backgroundColor: 'white',
+                                  flex: 1,
+                                  backgroundColor: 'transparent',
                                 }}
-                              />
-                            ) : (
-                              <View>
-                                <Text style={{ padding: 5 }}>{sport}</Text>
+                              >
+                                {Platform.OS === 'ios' ? (
+                                  <Image
+                                    source={getImage(sport)}
+                                    resizeMode="contain"
+                                    style={{
+                                      width: 60,
+                                      height: 60,
+                                      backgroundColor: 'white',
+                                    }}
+                                  />
+                                ) : (
+                                  <View>
+                                    <Text style={{ padding: 5 }}>{sport}</Text>
+                                  </View>
+                                )}
                               </View>
-                            )}
-                          </View>
-                        );
-                      })}
-                    </View>
-                  </View>
-                </Callout>
-              </Marker>
-            );
-        })}
-      </MapView>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    </Callout>
+                  </Marker>
+                );
+            })}
+        </MapView>
+      )}
+      <Modal visible={showModal}>
+        <View style={styles.modalOuterView}>
+          <View style={styles.modalInnerView}>
+            <Text> User Profile </Text>
+            <Button title="Close" onPress={() => setShowModal(false)}></Button>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -173,6 +169,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'lightyellow',
+  },
+  modalOuterView: {
+    // flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(20, 20, 20, .8)',
+  },
+  modalInnerView: {
+    alignItems: 'center',
+    width: 150,
+    height: 300,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
 });
 
