@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  Modal,
   Button,
+  ViewBase,
 } from 'react-native';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 import MapView, { Marker, Callout, Polyline } from 'react-native-maps';
-import { auth, db } from '../firebase';
+import Modal from 'react-native-modal';
+import { auth, db, storage } from '../firebase';
+import { getDownloadURL, ref } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import UsersContext from '../context/usersContext';
 
@@ -31,6 +33,10 @@ const MapScreen = ({ navigation, route }) => {
   );
   const [region, setRegion] = useState(INITALREGION);
   const [showModal, setShowModal] = useState(false);
+  const [modalName, setModalName] = useState('');
+  const [modalImage, setModalImage] = useState(null);
+  const [modalBio, setModalBio] = useState(null);
+  const [modalSports, setModalSports] = useState(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -68,6 +74,42 @@ const MapScreen = ({ navigation, route }) => {
       });
   };
 
+  const handleCalloutPress = (id, name, bio, sports) => {
+    setModalName(name);
+    setModalSports(sports);
+    setShowModal(true);
+    setModalBio(bio);
+
+    const getTheImage = async () => {
+      let imageRef = ref(storage, `profile/${id}/image`);
+      const downloadURL = await getDownloadURL(imageRef);
+      setModalImage(downloadURL);
+    };
+
+    getTheImage();
+  };
+
+  const getImage = (name) => {
+    switch (name) {
+      case 'Walking':
+        return require('../assets/sports/Walking.png');
+      case 'Running':
+        return require('../assets/sports/Running.png');
+      case 'Swimming':
+        return require('../assets/sports/Swimming.png');
+      case 'Boxing':
+        return require('../assets/sports/Boxing.png');
+      case 'Tennis':
+        return require('../assets/sports/Tennis.png');
+      case 'Table tennis':
+        return require('../assets/sports/Tabletennis.png');
+      case 'Cycling':
+        return require('../assets/sports/Cycling.png');
+      case 'Gym':
+        return require('../assets/sports/Gym.png');
+    }
+  };
+
   return (
     <View style={{}}>
       {region.latitude && (
@@ -75,37 +117,20 @@ const MapScreen = ({ navigation, route }) => {
           {users
             .filter((doc) => doc.id !== auth?.currentUser?.uid) // filter out the current user
             .map((doc, index) => {
-              const getImage = (name) => {
-                switch (name) {
-                  case 'Walking':
-                    require('../assets/sports/Walking.png');
-                  case 'Running':
-                    require('../assets/sports/Running.png');
-                  case 'Swimming':
-                    require('../assets/sports/Swimming.png');
-                  case 'Boxing':
-                    require('../assets/sports/Boxing.png');
-                  case 'Tennis':
-                    require('../assets/sports/Tennis.png');
-                  case 'Table tennis':
-                    require('../assets/sports/Tabletennis.png');
-                  case 'Cycling':
-                    require('../assets/sports/Cycling.png');
-                  case 'Gym':
-                    require('../assets/sports/Gym.png');
-                }
-              };
-
               if (doc.data().location)
                 return (
                   <Marker
                     key={index}
                     coordinate={doc.data().location}
                     title={doc.data().name}
-                    onCalloutPress={() => setShowModal(true)}
-                    // description={
-                    //   doc.data().sports ? doc.data().sports.join(', ') : ''
-                    // }
+                    onCalloutPress={() =>
+                      handleCalloutPress(
+                        doc.id,
+                        doc.data().name,
+                        doc.data().bio,
+                        doc.data().sports
+                      )
+                    }
                   >
                     <Callout
                       style={{
@@ -129,10 +154,10 @@ const MapScreen = ({ navigation, route }) => {
                                 {Platform.OS === 'ios' ? (
                                   <Image
                                     source={getImage(sport)}
-                                    resizeMode="contain"
+                                    resizeMode="cover"
                                     style={{
-                                      width: 60,
-                                      height: 60,
+                                      width: 70,
+                                      height: 70,
                                       backgroundColor: 'white',
                                     }}
                                   />
@@ -154,9 +179,92 @@ const MapScreen = ({ navigation, route }) => {
       )}
       <Modal visible={showModal}>
         <View style={styles.modalOuterView}>
-          <View style={styles.modalInnerView}>
-            <Text> User Profile </Text>
-            <Button title="Close" onPress={() => setShowModal(false)}></Button>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              style={{ position: 'absolute', right: 10, top: 10, zIndex: 10 }}
+              onPress={() => {
+                setModalImage(null);
+                setShowModal(false);
+              }}
+            >
+              <AntDesign name="closecircleo" size={40} color="white" />
+            </TouchableOpacity>
+            {modalImage ? (
+              <Image
+                source={{ uri: modalImage }}
+                resizeMode="contain"
+                style={{
+                  flex: 2,
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            ) : null}
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 24, padding: 10 }}>{modalName}</Text>
+            <Text style={{ padding: 10, fontSize: 18 }}>{modalBio}</Text>
+            <View
+              style={{
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  marginHorizontal: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                {modalSports?.map((sport, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Image
+                        source={getImage(sport)}
+                        resizeMode="contain"
+                        style={{
+                          width: 50,
+                          height: 50,
+                          backgroundColor: 'white',
+                        }}
+                      />
+
+                      <View>
+                        <Text style={{ padding: 5 }}>{sport}</Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+
+              <TouchableOpacity
+                style={{
+                  width: 250,
+                  backgroundColor: '#ef3939',
+                  alignItems: 'center',
+                  borderRadius: 15,
+                  marginVertical: 20,
+                }}
+                onPress={() => console.log('Go to message screen')}
+              >
+                <Text
+                  style={{
+                    padding: 10,
+                    color: 'white',
+                    fontSize: 18,
+                    fontWeight: '500',
+                  }}
+                >
+                  Message
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -171,18 +279,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightyellow',
   },
   modalOuterView: {
-    // flex: 1,
+    flex: 0.7,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(20, 20, 20, .8)',
-  },
-  modalInnerView: {
-    alignItems: 'center',
-    width: 150,
-    height: 300,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
   },
 });
 

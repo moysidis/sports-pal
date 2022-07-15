@@ -71,6 +71,10 @@ const LoadingScreen = ({ navigation, route }) => {
   // }, [auth]); // usersState
 
   useEffect(() => {
+    console.log('usersState.userDocs.length', usersState.userDocs.length);
+  }, [usersState]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log(
@@ -81,24 +85,29 @@ const LoadingScreen = ({ navigation, route }) => {
           const foundUser = usersState.userDocs.filter(
             (stateUser) => stateUser.id === user.uid
           )[0];
-          setCurrentUserData(foundUser.data());
-          navigation.replace('TabView');
+          if (foundUser) {
+            setCurrentUserData(foundUser.data());
+            navigation.navigate('TabView');
+          } else {
+            return;
+          }
         } else {
           return;
         }
       } else {
-        navigation.replace('Login');
+        navigation.navigate('Login');
       }
     });
 
     return () => unsubscribe;
-  });
+  }, [usersState.userDocs]);
 
   // Check if the user is already logged in
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, 'users')),
       (snapshot) => {
+        console.log('Setting the users');
         setUsers(snapshot.docs); // get the user docs
       },
       (error) => {
@@ -107,7 +116,7 @@ const LoadingScreen = ({ navigation, route }) => {
     );
 
     return () => unsubscribe;
-  }, [usersState]); // , auth
+  }, []); // , auth
 
   return (
     <View style={styles.container}>

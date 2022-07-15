@@ -9,7 +9,10 @@ const UPDATE_USER = 'UPDATE_USER';
 const usersReducer = (state, action) => {
   switch (action.type) {
     case SET_USERS:
-      return { ...state, userDocs: [...action.userDocs] };
+      console.log('action.userDocs.length', action.userDocs.length);
+      const newState = { ...state, userDocs: [...action.userDocs] };
+      console.log(newState.userDocs.length);
+      return newState;
     case SET_CURRENT_USER:
       return { ...state, currentUser: { ...action.currentUser } };
     case UPDATE_USER:
