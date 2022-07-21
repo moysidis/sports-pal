@@ -133,19 +133,6 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <TouchableOpacity
-          style={{ position: 'absolute', right: 0, top: 50 }}
-          onPress={signUserOut}
-        >
-          <SimpleLineIcons
-            name="logout"
-            size={30}
-            color="black"
-            style={{ marginLeft: 10 }}
-          />
-          <Text>Log out</Text>
-        </TouchableOpacity>
-
         <View style={{ marginTop: 60, alignItems: 'center' }}>
           <Text style={{ fontSize: 26, fontWeight: 'bold' }}>My account</Text>
         </View>
@@ -192,7 +179,7 @@ const ProfileScreen = ({ navigation }) => {
           <View style={{ flex: 1, alignItems: 'center' }}>
             <TextInput
               style={{
-                backgroundColor: 'lightgrey',
+                backgroundColor: '#D5D5D5',
                 width: 300,
                 fontSize: 18,
                 height: 40,
@@ -220,7 +207,7 @@ const ProfileScreen = ({ navigation }) => {
           <View style={{ flex: 1, alignItems: 'center' }}>
             <TextInput
               style={{
-                backgroundColor: 'lightgrey',
+                backgroundColor: '#D5D5D5',
                 width: 300,
                 fontSize: 18,
                 height: 120,
@@ -243,7 +230,7 @@ const ProfileScreen = ({ navigation }) => {
               width: 250,
               backgroundColor: '#ef3939',
               alignItems: 'center',
-              borderRadius: 15,
+              borderRadius: 10,
               marginHorizontal: 10,
             }}
             onPress={() =>
@@ -321,8 +308,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Walking')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -339,8 +326,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Running')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -359,8 +346,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Tennis')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -377,8 +364,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Table tennis')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -397,9 +384,7 @@ const ProfileScreen = ({ navigation }) => {
               style={{
                 height: 110,
                 width: 140,
-                backgroundColor: sports.includes('Gym')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                backgroundColor: sports.includes('Gym') ? '#C48484' : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -416,8 +401,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Boxing')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -436,8 +421,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Swimming')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -454,8 +439,8 @@ const ProfileScreen = ({ navigation }) => {
                 height: 110,
                 width: 140,
                 backgroundColor: sports.includes('Cycling')
-                  ? 'lightgreen'
-                  : 'lightgrey',
+                  ? '#C48484'
+                  : '#D5D5D5',
                 borderColor: 'black',
                 borderWidth: 2,
                 margin: 3,
@@ -470,13 +455,46 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <View style={{ alignItems: 'center', marginVertical: 40 }}>
+        <View style={{ alignItems: 'center', marginTop: 40 }}>
+          <TouchableOpacity
+            style={{
+              width: 250,
+              backgroundColor: 'white',
+              alignItems: 'center',
+              borderRadius: 10,
+              marginHorizontal: 10,
+              borderWidth: 1,
+              borderColor: 'red',
+            }}
+            onPress={signUserOut}
+          >
+            <View style={{ alignItems: 'center' }}>
+              <SimpleLineIcons
+                style={{ paddingTop: 5 }}
+                name="logout"
+                size={22}
+                color="red"
+              />
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 18,
+                  paddingBottom: 5,
+                }}
+              >
+                Log Out
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ alignItems: 'center', marginVertical: 30 }}>
           <TouchableOpacity
             style={{
               width: 250,
               backgroundColor: count > 2 ? '#ef3939' : 'grey',
               alignItems: 'center',
-              borderRadius: 15,
+              borderRadius: 10,
               marginHorizontal: 10,
             }}
             disabled={count <= 2}

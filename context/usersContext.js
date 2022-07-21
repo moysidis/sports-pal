@@ -4,23 +4,22 @@ const UsersContext = createContext();
 
 const SET_USERS = 'SET_USERS';
 const SET_CURRENT_USER = 'SET_CURRENT_USER';
-const UPDATE_USER = 'UPDATE_USER';
+const SET_CURRENT_USER_MESSAGES = 'SET_CURRENT_USER_MESSAGES';
+const ADD_TO_CURRENT_USER_MESSAGES = 'ADD_TO_CURRENT_USER_MESSAGES';
 
 const usersReducer = (state, action) => {
   switch (action.type) {
     case SET_USERS:
-      console.log('action.userDocs.length', action.userDocs.length);
-      const newState = { ...state, userDocs: [...action.userDocs] };
-      console.log(newState.userDocs.length);
-      return newState;
+      return { ...state, userDocs: [...action.userDocs] };
     case SET_CURRENT_USER:
       return { ...state, currentUser: { ...action.currentUser } };
-    case UPDATE_USER:
-      const theDoc = state.userDocs.find(
-        (doc) => doc.id === action.updatedData.id
-      );
-      console.log('Found the Doc', theDoc);
-      return { ...state };
+    case SET_CURRENT_USER_MESSAGES:
+      return { ...state, userMessages: [...action.userMessages] };
+    case ADD_TO_CURRENT_USER_MESSAGES:
+      return {
+        ...state,
+        userMessages: [...state.userMessages, ...action.userMessages],
+      };
     default:
       return state;
   }
@@ -30,6 +29,7 @@ export const UsersProvider = ({ children }) => {
   const initialState = {
     userDocs: [],
     currentUser: null,
+    userMessages: [],
   };
 
   const [usersState, dispatch] = useReducer(usersReducer, initialState);
@@ -43,8 +43,24 @@ export const UsersProvider = ({ children }) => {
     dispatch({ type: SET_CURRENT_USER, currentUser: cUser });
   };
 
+  const setCurrentUserMessages = (userMessages) => {
+    dispatch({ type: SET_CURRENT_USER_MESSAGES, userMessages });
+  };
+
+  const addToCurrentUserMessages = (userMessages) => {
+    dispatch({ type: ADD_TO_CURRENT_USER_MESSAGES, userMessages });
+  };
+
   return (
-    <UsersContext.Provider value={{ usersState, setUsers, setCurrentUserData }}>
+    <UsersContext.Provider
+      value={{
+        usersState,
+        setUsers,
+        setCurrentUserData,
+        setCurrentUserMessages,
+        addToCurrentUserMessages,
+      }}
+    >
       {children}
     </UsersContext.Provider>
   );

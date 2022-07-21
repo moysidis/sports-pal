@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState, useContext } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useContext,
+  useFocus,
+} from 'react';
 import {
   View,
   Text,
@@ -10,15 +16,17 @@ import {
   ViewBase,
 } from 'react-native';
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
-import MapView, { Marker, Callout, Polyline } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Modal from 'react-native-modal';
-import { auth, db, storage } from '../firebase';
+import { auth, storage } from '../firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
+import { useIsFocused } from '@react-navigation/native';
 import UsersContext from '../context/usersContext';
 
-const MapScreen = ({ navigation, route }) => {
+const MapScreen = ({ navigation }) => {
   const { usersState } = useContext(UsersContext);
+  const isFocused = useIsFocused();
 
   const INITALREGION = {
     latitude: 44.814026,
@@ -33,10 +41,17 @@ const MapScreen = ({ navigation, route }) => {
   );
   const [region, setRegion] = useState(INITALREGION);
   const [showModal, setShowModal] = useState(false);
+  const [modalId, setModalId] = useState('');
   const [modalName, setModalName] = useState('');
   const [modalImage, setModalImage] = useState(null);
   const [modalBio, setModalBio] = useState(null);
   const [modalSports, setModalSports] = useState(null);
+  const [modalCity, setModalCity] = useState(null);
+
+  useEffect(() => {
+    setModalImage(null);
+    setShowModal(false);
+  }, [isFocused]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,11 +89,13 @@ const MapScreen = ({ navigation, route }) => {
       });
   };
 
-  const handleCalloutPress = (id, name, bio, sports) => {
+  const handlePress = (id, name, bio, sports, city) => {
+    setModalId(id);
     setModalName(name);
     setModalSports(sports);
-    setShowModal(true);
     setModalBio(bio);
+    setModalCity(city);
+    setShowModal(true);
 
     const getTheImage = async () => {
       let imageRef = ref(storage, `profile/${id}/image`);
@@ -123,16 +140,18 @@ const MapScreen = ({ navigation, route }) => {
                     key={index}
                     coordinate={doc.data().location}
                     title={doc.data().name}
-                    onCalloutPress={() =>
-                      handleCalloutPress(
+                    icon={require('../assets/userMarker.png')}
+                    onPress={() =>
+                      handlePress(
                         doc.id,
                         doc.data().name,
                         doc.data().bio,
-                        doc.data().sports
+                        doc.data().sports,
+                        doc.data().city
                       )
                     }
                   >
-                    <Callout
+                    {/* <Callout
                       style={{
                         maxWidth: 300,
                       }}
@@ -171,7 +190,7 @@ const MapScreen = ({ navigation, route }) => {
                           })}
                         </View>
                       </View>
-                    </Callout>
+                    </Callout> */}
                   </Marker>
                 );
             })}
@@ -234,10 +253,9 @@ const MapScreen = ({ navigation, route }) => {
                           backgroundColor: 'white',
                         }}
                       />
-
-                      <View>
+                      {/* <View>
                         <Text style={{ padding: 5 }}>{sport}</Text>
-                      </View>
+                      </View> */}
                     </View>
                   );
                 })}
@@ -251,7 +269,14 @@ const MapScreen = ({ navigation, route }) => {
                   borderRadius: 15,
                   marginVertical: 20,
                 }}
-                onPress={() => console.log('Go to message screen')}
+                onPress={() => {
+                  navigation.navigate('TheChat', {
+                    user: auth.currentUser.uid,
+                    recipientId: modalId,
+                    recipientName: modalName,
+                    recipientCity: modalCity,
+                  });
+                }}
               >
                 <Text
                   style={{

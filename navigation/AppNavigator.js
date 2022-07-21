@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Feather, Ionicons } from '@expo/vector-icons';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -10,14 +10,16 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ProfileMapScreen from '../screens/ProfileMapScreen';
 import MapScreen from '../screens/MapScreen';
 import ChatScreen from '../screens/ChatScreen';
+import ChatListScreen from '../screens/ChatListScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MapStack = () => {
+const MapChatStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="TheMap" component={MapScreen} />
+      <Stack.Screen name="TheChat" component={ChatScreen} />
     </Stack.Navigator>
   );
 };
@@ -30,9 +32,10 @@ const ProfileStack = () => {
   );
 };
 
-const ChatStack = () => {
+const ChatListStack = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen name="TheChatList" component={ChatListScreen} />
       <Stack.Screen name="TheChat" component={ChatScreen} />
     </Stack.Navigator>
   );
@@ -51,8 +54,8 @@ const TabFlow = () => {
       }}
     >
       <Tab.Screen
-        name="Map"
-        component={MapStack}
+        name="MapChat"
+        component={MapChatStack}
         options={{
           tabBarIcon: (tabInfo) => (
             <Feather name="map-pin" size={35} color="black" />
@@ -60,11 +63,11 @@ const TabFlow = () => {
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatStack}
+        name="ChatList"
+        component={ChatListStack}
         options={{
           tabBarIcon: (tabInfo) => (
-            <Ionicons name="chatbubbles-outline" size={35} color="black" />
+            <Ionicons name="chatbox-outline" size={35} color="black" />
           ),
         }}
       />
@@ -73,7 +76,7 @@ const TabFlow = () => {
         component={ProfileStack}
         options={{
           tabBarIcon: (tabInfo) => (
-            <Feather name="user" size={35} color="black" />
+            <FontAwesome5 name="user-circle" size={35} color="black" />
           ),
         }}
       />

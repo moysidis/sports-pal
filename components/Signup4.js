@@ -84,8 +84,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Walking')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -101,8 +101,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Running')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -120,8 +120,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Tennis')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -137,8 +137,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Table tennis')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -156,9 +156,7 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
             style={{
               height: 110,
               width: 140,
-              backgroundColor: sports.includes('Gym')
-                ? 'lightgreen'
-                : 'lightgrey',
+              backgroundColor: sports.includes('Gym') ? '#C48484' : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -174,8 +172,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Boxing')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -193,8 +191,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Swimming')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
@@ -210,8 +208,8 @@ const Signup4 = ({ sports, setSports, handleSignup, previousStep }) => {
               height: 110,
               width: 140,
               backgroundColor: sports.includes('Cycling')
-                ? 'lightgreen'
-                : 'lightgrey',
+                ? '#C48484'
+                : '#D5D5D5',
               borderColor: 'black',
               borderWidth: 2,
               margin: 3,
