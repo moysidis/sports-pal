@@ -44,6 +44,7 @@ const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     const getTheImage = async () => {
+      console.log(`profile/${auth.currentUser.uid}/image`);
       let imageRef = ref(storage, `profile/${auth.currentUser.uid}/image`);
       const downloadURL = await getDownloadURL(imageRef);
       setImage(downloadURL);

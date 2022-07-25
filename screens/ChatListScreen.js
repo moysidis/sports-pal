@@ -10,7 +10,8 @@ const ChatScreen = ({ navigation, route }) => {
   const { usersState } = useContext(UsersContext);
   const [messages, setMessages] = useState([]);
   const [messageList, setMessageList] = useState([]);
-  const [url, setUrl] = useState([]);
+  const [url, setUrl] = useState({});
+  const [data, setData] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,22 +20,25 @@ const ChatScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    const overviewRef = ref(storage, `profile`);
-    listAll(overviewRef)
-      .then((res) => {
-        let promises = res.prefixes.forEach((imageRef) => {
-          getDownloadURL(imageRef._location.path_ + '/image');
+    const getTheImages = async () => {
+      const overviewRef = ref(storage, `profile`);
+      const res = await listAll(overviewRef);
+      try {
+        res.prefixes.forEach(async (imageRef, index) => {
+          const userId = imageRef._location.path_.substring(8);
+          const fullRef = ref(storage, imageRef._location.path_ + '/image');
+          const theUrl = await getDownloadURL(fullRef);
+          setUrl((prev) => ({ ...prev, [userId]: theUrl }));
         });
-        Promise.all(promises).then((urls) => {
-          setUrl({
-            urlLink: urls,
-          });
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      } catch (e) {
+        console.log('error', e.message);
+      }
+    };
+
+    getTheImages();
   }, []);
+
+  console.log('url', url);
 
   useEffect(() => {
     const tempList = [
@@ -70,46 +74,51 @@ const ChatScreen = ({ navigation, route }) => {
   }, [navigation]);
 
   return (
-    <ScrollView style={{ marginTop: 30 }}>
-      {messageList?.map((userId, index) => {
-        // const getTheImage = async () => {
-        //   let imageRef = ref(storage, `profile/${id}/image`);
-        //   const downloadURL = await getDownloadURL(imageRef);
-        //   return downloadURL;
-        // };
-
-        const user = usersState.userDocs.find((user) => user.id === userId);
-        // const imageUrl = getTheImage();
-        return (
-          <TouchableOpacity
-            key={index}
-            style={{
-              height: 80,
-              padding: 10,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              navigation.navigate('TheChat', {
-                user: auth.currentUser.uid,
-                recipientId: user.id,
-                recipientName: user.data().name,
-              });
-            }}
-          >
-            <Image
-              source={require('../assets/user.png')}
-              resizeMode="contain"
+    <View>
+      <View style={{ marginTop: 50, alignItems: 'center' }}>
+        <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Chats</Text>
+      </View>
+      <ScrollView style={{ marginTop: 0 }}>
+        {messageList?.map((userId, index) => {
+          const user = usersState.userDocs.find((user) => user.id === userId);
+          return (
+            <TouchableOpacity
+              key={index}
               style={{
+                marginTop: 20,
                 height: 100,
-                width: 100,
+                padding: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
-            />
-            <Text style={{ fontSize: 20 }}>{user.data().name} </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </ScrollView>
+              onPress={() => {
+                navigation.navigate('TheChat', {
+                  user: auth.currentUser.uid,
+                  recipientId: user.id,
+                  recipientName: user.data().name,
+                });
+              }}
+            >
+              <Image
+                // source={require('../assets/user.png')}
+                source={{ uri: url[user.id] }}
+                resizeMode="cover"
+                style={{
+                  height: 100,
+                  width: 100,
+                  borderRadius: 100,
+                }}
+              />
+              <Text
+                style={{ fontSize: 20, fontWeight: 'bold', paddingLeft: 20 }}
+              >
+                {user.data().name}{' '}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
   );
 };
 

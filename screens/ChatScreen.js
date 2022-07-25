@@ -112,12 +112,16 @@ const ChatScreen = ({ navigation, route }) => {
       </View>
       <View style={{ flex: 6 }}>
         <GiftedChat
-          messages={messages.filter(
-            (message) =>
-              (message.recipientId === user &&
-                message.user._id === recipientId) ||
-              (message.recipientId === recipientId && message.user._id === user)
-          )}
+          messages={
+            messages.filter(
+              (message) =>
+                (message.recipientId === user &&
+                  message.user._id === recipientId) ||
+                (message.recipientId === recipientId &&
+                  message.user._id === user)
+            )
+            // .sort((a, b) => a.createdAt > b.createdAt)
+          }
           showAvatarForEveryMessage={true}
           onSend={(messages) => onSend(messages)}
           user={{
