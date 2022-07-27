@@ -26,14 +26,34 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vasileios.sportspal.ios",
+      "buildNumber": "4.0.1",
+      "config": {
+        "googleMapsApiKey": "AIzaSyC2Gc4o7Lomk1P7zY104O88ibLeiPSSL1I"
+      },
+      "infoPlist": {
+        "NSLocationAlwaysUsageDescription": "Location permission is necessary in order to show sportpals in your area",
+        "NSLocationWhenInUseUsageDescription": "Location permission is necessary in order to show sportpals in your area"
+      }
+
     },
     "android": {
+             "package": "com.vasileios.sportspal",
+      "versionCode": 4,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC2Gc4o7Lomk1P7zY104O88ibLeiPSSL1I"
+        }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.vasileios.sportspal"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

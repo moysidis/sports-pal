@@ -137,6 +137,7 @@ const MapScreen = ({ navigation }) => {
               if (doc.data().location)
                 return (
                   <Marker
+                    style={{ height: 50, width: 50 }}
                     key={index}
                     coordinate={doc.data().location}
                     title={doc.data().name}
