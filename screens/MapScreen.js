@@ -137,11 +137,10 @@ const MapScreen = ({ navigation }) => {
               if (doc.data().location)
                 return (
                   <Marker
-                    style={{ height: 50, width: 50 }}
                     key={index}
                     coordinate={doc.data().location}
                     title={doc.data().name}
-                    icon={require('../assets/userMarker.png')}
+                    // icon={require('../assets/userMarker.png')}
                     onPress={() =>
                       handlePress(
                         doc.id,
@@ -152,6 +151,10 @@ const MapScreen = ({ navigation }) => {
                       )
                     }
                   >
+                    <Image
+                      source={require('../assets/userMarker.png')}
+                      style={{ height: 32, width: 32 }}
+                    />
                     {/* <Callout
                       style={{
                         maxWidth: 300,
